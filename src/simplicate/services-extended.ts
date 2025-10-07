@@ -378,12 +378,12 @@ export class SimplicateServiceExtended {
   }
 
   async getLeave(params?: { limit?: number; offset?: number }): Promise<SimplicateLeave[]> {
-    const response = await this.client.get('/hours/leave', params);
+    const response = await this.client.get('/hrm/leave', params);
     return response.data || [];
   }
 
   async createLeave(data: Partial<SimplicateLeave>): Promise<SimplicateLeave> {
-    const response = await this.client.post('/hours/leave', data);
+    const response = await this.client.post('/hrm/leave', data);
     return response.data;
   }
 
@@ -499,8 +499,16 @@ export class SimplicateServiceExtended {
   }
 
   async getCalendarEvents(params?: { limit?: number; offset?: number }): Promise<SimplicateCalendar[]> {
-    const response = await this.client.get('/hours/calendar', params);
-    return response.data || [];
+    // Note: Calendar endpoint may not be available in all Simplicate instances
+    // Try timetable or use hours/leave data instead
+    try {
+      const response = await this.client.get('/hrm/timetable', params);
+      return response.data || [];
+    } catch (error) {
+      // Fallback: return empty array if endpoint doesn't exist
+      console.error('Calendar/timetable endpoint not available');
+      return [];
+    }
   }
 
   // ============================================
