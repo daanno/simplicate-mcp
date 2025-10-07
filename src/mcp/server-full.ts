@@ -9,8 +9,8 @@ import {
 import { SimplicateServiceExtended } from '../simplicate/services-extended';
 
 /**
- * Comprehensive MCP Server for Simplicate with ALL modules
- * Includes: Projects, CRM, Sales, Hours, Invoices, HRM, Services, Tasks, Costs, Documents, Contracts, and more
+ * Simplicate MCP Server for Project Planning & Management
+ * Includes: Projects, Tasks, CRM, Services, Documents, Contracts
  */
 export class SimplicateMCPServerFull {
   private server: Server;
@@ -215,217 +215,6 @@ export class SimplicateMCPServerFull {
         },
 
         // =============================================
-        // SALES TOOLS (5 tools)
-        // =============================================
-        {
-          name: 'get_quotes',
-          description: 'Retrieve sales quotes',
-          inputSchema: {
-            type: 'object',
-            properties: {
-              limit: { type: 'number' },
-              offset: { type: 'number' },
-            },
-          },
-        },
-        {
-          name: 'get_quote',
-          description: 'Get specific quote by ID',
-          inputSchema: {
-            type: 'object',
-            properties: { quote_id: { type: 'string' } },
-            required: ['quote_id'],
-          },
-        },
-        {
-          name: 'create_quote',
-          description: 'Create a new sales quote',
-          inputSchema: {
-            type: 'object',
-            properties: {
-              subject: { type: 'string' },
-              organization_id: { type: 'string' },
-            },
-            required: ['subject'],
-          },
-        },
-        {
-          name: 'get_sales',
-          description: 'Retrieve sales records',
-          inputSchema: {
-            type: 'object',
-            properties: {
-              limit: { type: 'number' },
-              offset: { type: 'number' },
-            },
-          },
-        },
-        {
-          name: 'get_sale',
-          description: 'Get specific sale by ID',
-          inputSchema: {
-            type: 'object',
-            properties: { sale_id: { type: 'string' } },
-            required: ['sale_id'],
-          },
-        },
-
-        // =============================================
-        // HOURS & TIMESHEETS TOOLS (6 tools)
-        // =============================================
-        {
-          name: 'get_hours',
-          description: 'Retrieve timesheet hours',
-          inputSchema: {
-            type: 'object',
-            properties: {
-              limit: { type: 'number' },
-              offset: { type: 'number' },
-            },
-          },
-        },
-        {
-          name: 'get_hours_entry',
-          description: 'Get specific hours entry by ID',
-          inputSchema: {
-            type: 'object',
-            properties: { hours_id: { type: 'string' } },
-            required: ['hours_id'],
-          },
-        },
-        {
-          name: 'create_hours',
-          description: 'Create a new hours entry',
-          inputSchema: {
-            type: 'object',
-            properties: {
-              employee_id: { type: 'string' },
-              project_id: { type: 'string' },
-              hours: { type: 'number' },
-              start_date: { type: 'string' },
-              note: { type: 'string' },
-            },
-            required: ['hours', 'start_date'],
-          },
-        },
-        {
-          name: 'update_hours',
-          description: 'Update hours entry',
-          inputSchema: {
-            type: 'object',
-            properties: {
-              hours_id: { type: 'string' },
-              data: { type: 'object' },
-            },
-            required: ['hours_id', 'data'],
-          },
-        },
-        {
-          name: 'delete_hours',
-          description: 'Delete hours entry',
-          inputSchema: {
-            type: 'object',
-            properties: { hours_id: { type: 'string' } },
-            required: ['hours_id'],
-          },
-        },
-        {
-          name: 'get_timesheets',
-          description: 'Retrieve timesheets',
-          inputSchema: {
-            type: 'object',
-            properties: {
-              limit: { type: 'number' },
-              offset: { type: 'number' },
-            },
-          },
-        },
-
-        // =============================================
-        // INVOICES & FINANCE TOOLS (9 tools)
-        // =============================================
-        {
-          name: 'get_invoices',
-          description: 'Retrieve invoices',
-          inputSchema: {
-            type: 'object',
-            properties: {
-              limit: { type: 'number' },
-              offset: { type: 'number' },
-            },
-          },
-        },
-        {
-          name: 'get_invoice',
-          description: 'Get specific invoice by ID',
-          inputSchema: {
-            type: 'object',
-            properties: { invoice_id: { type: 'string' } },
-            required: ['invoice_id'],
-          },
-        },
-        {
-          name: 'create_invoice',
-          description: 'Create a new invoice',
-          inputSchema: {
-            type: 'object',
-            properties: {
-              organization_id: { type: 'string' },
-              date: { type: 'string' },
-            },
-            required: ['organization_id'],
-          },
-        },
-        {
-          name: 'update_invoice',
-          description: 'Update an invoice',
-          inputSchema: {
-            type: 'object',
-            properties: {
-              invoice_id: { type: 'string' },
-              data: { type: 'object' },
-            },
-            required: ['invoice_id', 'data'],
-          },
-        },
-        {
-          name: 'get_payments',
-          description: 'Retrieve invoice payments',
-          inputSchema: {
-            type: 'object',
-            properties: {
-              limit: { type: 'number' },
-              offset: { type: 'number' },
-            },
-          },
-        },
-        {
-          name: 'create_payment',
-          description: 'Create a payment record',
-          inputSchema: {
-            type: 'object',
-            properties: {
-              invoice_id: { type: 'string' },
-              amount: { type: 'number' },
-              payment_date: { type: 'string' },
-              method: { type: 'string' },
-            },
-            required: ['invoice_id', 'amount'],
-          },
-        },
-        {
-          name: 'get_revenue',
-          description: 'Retrieve revenue records',
-          inputSchema: {
-            type: 'object',
-            properties: {
-              limit: { type: 'number' },
-              offset: { type: 'number' },
-            },
-          },
-        },
-
-        // =============================================
         // SERVICES TOOLS (4 tools)
         // =============================================
         {
@@ -506,70 +295,7 @@ export class SimplicateMCPServerFull {
         },
 
         // =============================================
-        // COSTS & MILEAGE TOOLS (5 tools)
-        // =============================================
-        {
-          name: 'get_costs',
-          description: 'Retrieve project costs',
-          inputSchema: {
-            type: 'object',
-            properties: {
-              limit: { type: 'number' },
-              offset: { type: 'number' },
-            },
-          },
-        },
-        {
-          name: 'get_cost',
-          description: 'Get specific cost by ID',
-          inputSchema: {
-            type: 'object',
-            properties: { cost_id: { type: 'string' } },
-            required: ['cost_id'],
-          },
-        },
-        {
-          name: 'create_cost',
-          description: 'Create a cost entry',
-          inputSchema: {
-            type: 'object',
-            properties: {
-              description: { type: 'string' },
-              amount: { type: 'number' },
-              project_id: { type: 'string' },
-              date: { type: 'string' },
-            },
-            required: ['description', 'amount'],
-          },
-        },
-        {
-          name: 'get_mileage',
-          description: 'Retrieve mileage records',
-          inputSchema: {
-            type: 'object',
-            properties: {
-              limit: { type: 'number' },
-              offset: { type: 'number' },
-            },
-          },
-        },
-        {
-          name: 'create_mileage',
-          description: 'Create mileage entry',
-          inputSchema: {
-            type: 'object',
-            properties: {
-              employee_id: { type: 'string' },
-              project_id: { type: 'string' },
-              distance: { type: 'number' },
-              date: { type: 'string' },
-            },
-            required: ['distance', 'date'],
-          },
-        },
-
-        // =============================================
-        // DOCUMENTS TOOLS (3 tools)
+        // DOCUMENTS TOOLS (2 tools)
         // =============================================
         {
           name: 'get_documents',
@@ -748,112 +474,6 @@ export class SimplicateMCPServerFull {
             return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
           }
 
-          // SALES
-          case 'get_quotes': {
-            const data = await this.simplicateService.getQuotes({
-              limit: (toolArgs.limit as number) || 10,
-              offset: (toolArgs.offset as number) || 0,
-            });
-            return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
-          }
-          case 'get_quote': {
-            if (!toolArgs.quote_id) throw new Error('quote_id is required');
-            const data = await this.simplicateService.getQuoteById(toolArgs.quote_id);
-            return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
-          }
-          case 'create_quote': {
-            const data = await this.simplicateService.createQuote(toolArgs);
-            return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
-          }
-          case 'get_sales': {
-            const data = await this.simplicateService.getSales({
-              limit: (toolArgs.limit as number) || 10,
-              offset: (toolArgs.offset as number) || 0,
-            });
-            return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
-          }
-          case 'get_sale': {
-            if (!toolArgs.sale_id) throw new Error('sale_id is required');
-            const data = await this.simplicateService.getSaleById(toolArgs.sale_id);
-            return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
-          }
-
-          // HOURS & TIMESHEETS
-          case 'get_hours': {
-            const data = await this.simplicateService.getHours({
-              limit: (toolArgs.limit as number) || 10,
-              offset: (toolArgs.offset as number) || 0,
-            });
-            return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
-          }
-          case 'get_hours_entry': {
-            if (!toolArgs.hours_id) throw new Error('hours_id is required');
-            const data = await this.simplicateService.getHoursById(toolArgs.hours_id);
-            return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
-          }
-          case 'create_hours': {
-            const data = await this.simplicateService.createHours(toolArgs);
-            return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
-          }
-          case 'update_hours': {
-            if (!toolArgs.hours_id || !toolArgs.data) throw new Error('hours_id and data required');
-            const data = await this.simplicateService.updateHours(toolArgs.hours_id, toolArgs.data);
-            return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
-          }
-          case 'delete_hours': {
-            if (!toolArgs.hours_id) throw new Error('hours_id is required');
-            await this.simplicateService.deleteHours(toolArgs.hours_id);
-            return { content: [{ type: 'text', text: 'Hours entry deleted successfully' }] };
-          }
-          case 'get_timesheets': {
-            const data = await this.simplicateService.getTimesheets({
-              limit: (toolArgs.limit as number) || 10,
-              offset: (toolArgs.offset as number) || 0,
-            });
-            return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
-          }
-
-          // INVOICES & FINANCE
-          case 'get_invoices': {
-            const data = await this.simplicateService.getInvoices({
-              limit: (toolArgs.limit as number) || 10,
-              offset: (toolArgs.offset as number) || 0,
-            });
-            return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
-          }
-          case 'get_invoice': {
-            if (!toolArgs.invoice_id) throw new Error('invoice_id is required');
-            const data = await this.simplicateService.getInvoiceById(toolArgs.invoice_id);
-            return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
-          }
-          case 'create_invoice': {
-            const data = await this.simplicateService.createInvoice(toolArgs);
-            return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
-          }
-          case 'update_invoice': {
-            if (!toolArgs.invoice_id || !toolArgs.data) throw new Error('invoice_id and data required');
-            const data = await this.simplicateService.updateInvoice(toolArgs.invoice_id, toolArgs.data);
-            return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
-          }
-          case 'get_payments': {
-            const data = await this.simplicateService.getPayments({
-              limit: (toolArgs.limit as number) || 10,
-              offset: (toolArgs.offset as number) || 0,
-            });
-            return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
-          }
-          case 'create_payment': {
-            const data = await this.simplicateService.createPayment(toolArgs);
-            return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
-          }
-          case 'get_revenue': {
-            const data = await this.simplicateService.getRevenue({
-              limit: (toolArgs.limit as number) || 10,
-              offset: (toolArgs.offset as number) || 0,
-            });
-            return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
-          }
-
           // SERVICES
           case 'get_services': {
             const data = await this.simplicateService.getServices({
@@ -889,35 +509,6 @@ export class SimplicateMCPServerFull {
           case 'update_task': {
             if (!toolArgs.task_id || !toolArgs.data) throw new Error('task_id and data required');
             const data = await this.simplicateService.updateTask(toolArgs.task_id, toolArgs.data);
-            return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
-          }
-
-          // COSTS & MILEAGE
-          case 'get_costs': {
-            const data = await this.simplicateService.getCosts({
-              limit: (toolArgs.limit as number) || 10,
-              offset: (toolArgs.offset as number) || 0,
-            });
-            return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
-          }
-          case 'get_cost': {
-            if (!toolArgs.cost_id) throw new Error('cost_id is required');
-            const data = await this.simplicateService.getCostById(toolArgs.cost_id);
-            return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
-          }
-          case 'create_cost': {
-            const data = await this.simplicateService.createCost(toolArgs);
-            return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
-          }
-          case 'get_mileage': {
-            const data = await this.simplicateService.getMileage({
-              limit: (toolArgs.limit as number) || 10,
-              offset: (toolArgs.offset as number) || 0,
-            });
-            return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
-          }
-          case 'create_mileage': {
-            const data = await this.simplicateService.createMileage(toolArgs);
             return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
           }
 
@@ -985,13 +576,8 @@ export class SimplicateMCPServerFull {
         { uri: 'simplicate://projects', name: 'Projects', description: 'All projects', mimeType: 'application/json' },
         { uri: 'simplicate://organizations', name: 'Organizations', description: 'CRM organizations', mimeType: 'application/json' },
         { uri: 'simplicate://persons', name: 'Persons', description: 'Contact persons', mimeType: 'application/json' },
-        { uri: 'simplicate://hours', name: 'Hours', description: 'Timesheet hours', mimeType: 'application/json' },
-        { uri: 'simplicate://invoices', name: 'Invoices', description: 'All invoices', mimeType: 'application/json' },
-        { uri: 'simplicate://quotes', name: 'Quotes', description: 'Sales quotes', mimeType: 'application/json' },
-        { uri: 'simplicate://sales', name: 'Sales', description: 'Sales records', mimeType: 'application/json' },
         { uri: 'simplicate://services', name: 'Services', description: 'Service catalog', mimeType: 'application/json' },
         { uri: 'simplicate://tasks', name: 'Tasks', description: 'Project tasks', mimeType: 'application/json' },
-        { uri: 'simplicate://costs', name: 'Costs', description: 'Project costs', mimeType: 'application/json' },
         { uri: 'simplicate://contracts', name: 'Contracts', description: 'All contracts', mimeType: 'application/json' },
         { uri: 'simplicate://documents', name: 'Documents', description: 'All documents', mimeType: 'application/json' },
       ],
@@ -1008,13 +594,8 @@ export class SimplicateMCPServerFull {
           case 'simplicate://projects': data = await this.simplicateService.getProjects({ limit }); break;
           case 'simplicate://organizations': data = await this.simplicateService.getOrganizations({ limit }); break;
           case 'simplicate://persons': data = await this.simplicateService.getPersons({ limit }); break;
-          case 'simplicate://hours': data = await this.simplicateService.getHours({ limit }); break;
-          case 'simplicate://invoices': data = await this.simplicateService.getInvoices({ limit }); break;
-          case 'simplicate://quotes': data = await this.simplicateService.getQuotes({ limit }); break;
-          case 'simplicate://sales': data = await this.simplicateService.getSales({ limit }); break;
           case 'simplicate://services': data = await this.simplicateService.getServices({ limit }); break;
           case 'simplicate://tasks': data = await this.simplicateService.getTasks({ limit }); break;
-          case 'simplicate://costs': data = await this.simplicateService.getCosts({ limit }); break;
           case 'simplicate://contracts': data = await this.simplicateService.getContracts({ limit }); break;
           case 'simplicate://documents': data = await this.simplicateService.getDocuments({ limit }); break;
           default: throw new Error(`Unknown resource: ${uri}`);
@@ -1033,7 +614,7 @@ export class SimplicateMCPServerFull {
   async start(): Promise<void> {
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
-    console.error('Simplicate MCP server (FULL) running on stdio with 52 tools');
+    console.error('Simplicate MCP server (Project Planning) running on stdio with 29 tools');
   }
 }
 
