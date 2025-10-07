@@ -540,6 +540,12 @@ export class SimplicateServiceExtended {
     }
   }
 
+  async getTimetable(params?: { limit?: number; offset?: number }): Promise<any[]> {
+    // Timetable shows regular schedule/working hours for employees
+    const response = await this.client.get('/hrm/timetable', params);
+    return response.data || [];
+  }
+
   // ============================================
   // COSTS & MILEAGE MODULE
   // ============================================

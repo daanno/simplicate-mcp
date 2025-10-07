@@ -463,7 +463,7 @@ export class SimplicateMCPServerFull {
         },
 
         // =============================================
-        // HRM TOOLS (4 tools)
+        // HRM TOOLS (5 tools)
         // =============================================
         {
           name: 'get_employees',
@@ -508,6 +508,17 @@ export class SimplicateMCPServerFull {
               end_date: { type: 'string' },
             },
             required: ['absence_type', 'start_date', 'end_date'],
+          },
+        },
+        {
+          name: 'get_timetable',
+          description: 'Retrieve employee timetable/schedule (shows regular working hours and planned schedule)',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              limit: { type: 'number', description: 'Maximum number to return (default: 10)' },
+              offset: { type: 'number', description: 'Number to skip for pagination' },
+            },
           },
         },
 
@@ -982,6 +993,13 @@ export class SimplicateMCPServerFull {
             const data = await this.simplicateService.createAbsence(toolArgs);
             return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
           }
+          case 'get_timetable': {
+            const data = await this.simplicateService.getTimetable({
+              limit: (toolArgs.limit as number) || 10,
+              offset: (toolArgs.offset as number) || 0,
+            });
+            return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
+          }
 
           // SERVICES
           case 'get_services': {
@@ -1117,6 +1135,7 @@ export class SimplicateMCPServerFull {
         { uri: 'simplicate://hours', name: 'Hours', description: 'Timesheet hours', mimeType: 'application/json' },
         { uri: 'simplicate://invoices', name: 'Invoices', description: 'All invoices', mimeType: 'application/json' },
         { uri: 'simplicate://employees', name: 'Employees', description: 'All employees', mimeType: 'application/json' },
+        { uri: 'simplicate://timetable', name: 'Timetable', description: 'Employee schedules and working hours', mimeType: 'application/json' },
         { uri: 'simplicate://quotes', name: 'Quotes', description: 'Sales quotes', mimeType: 'application/json' },
         { uri: 'simplicate://sales', name: 'Sales', description: 'Sales records', mimeType: 'application/json' },
         { uri: 'simplicate://services', name: 'Services', description: 'Service catalog', mimeType: 'application/json' },
@@ -1141,6 +1160,7 @@ export class SimplicateMCPServerFull {
           case 'simplicate://hours': data = await this.simplicateService.getHours({ limit }); break;
           case 'simplicate://invoices': data = await this.simplicateService.getInvoices({ limit }); break;
           case 'simplicate://employees': data = await this.simplicateService.getEmployees({ limit }); break;
+          case 'simplicate://timetable': data = await this.simplicateService.getTimetable({ limit }); break;
           case 'simplicate://quotes': data = await this.simplicateService.getQuotes({ limit }); break;
           case 'simplicate://sales': data = await this.simplicateService.getSales({ limit }); break;
           case 'simplicate://services': data = await this.simplicateService.getServices({ limit }); break;
