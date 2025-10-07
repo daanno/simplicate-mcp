@@ -8,7 +8,8 @@
     "start": "node dist/index.js",
     "dev": "ts-node src/index.ts",
     "watch": "tsc --watch",
-    "test": "node test-connection.js"
+    "test": "node test-connection.js",
+    "test:all": "node test-all-endpoints.js"
   },
   "keywords": [
     "mcp",
