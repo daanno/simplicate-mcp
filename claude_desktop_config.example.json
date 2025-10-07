@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "simplicate": {
+      "command": "node",
+      "args": ["/Users/dwayne/Documents/Playground/Simplicate/dist/index.js"]
+    }
+  }
+}
+
