@@ -271,7 +271,7 @@ export class SimplicateMCPServerFull {
         },
 
         // =============================================
-        // HOURS & TIMESHEETS TOOLS (9 tools)
+        // HOURS & TIMESHEETS TOOLS (6 tools)
         // =============================================
         {
           name: 'get_hours',
@@ -332,43 +332,6 @@ export class SimplicateMCPServerFull {
         {
           name: 'get_timesheets',
           description: 'Retrieve timesheets',
-          inputSchema: {
-            type: 'object',
-            properties: {
-              limit: { type: 'number' },
-              offset: { type: 'number' },
-            },
-          },
-        },
-        {
-          name: 'get_leave',
-          description: 'Retrieve leave/vacation entries',
-          inputSchema: {
-            type: 'object',
-            properties: {
-              limit: { type: 'number' },
-              offset: { type: 'number' },
-            },
-          },
-        },
-        {
-          name: 'create_leave',
-          description: 'Create leave/vacation entry',
-          inputSchema: {
-            type: 'object',
-            properties: {
-              employee_id: { type: 'string' },
-              leave_type: { type: 'string' },
-              start_date: { type: 'string' },
-              end_date: { type: 'string' },
-              hours: { type: 'number' },
-            },
-            required: ['leave_type', 'start_date', 'end_date'],
-          },
-        },
-        {
-          name: 'get_calendar_events',
-          description: 'Get calendar/planning events',
           inputSchema: {
             type: 'object',
             properties: {
@@ -458,66 +421,6 @@ export class SimplicateMCPServerFull {
             properties: {
               limit: { type: 'number' },
               offset: { type: 'number' },
-            },
-          },
-        },
-
-        // =============================================
-        // HRM TOOLS (5 tools)
-        // =============================================
-        {
-          name: 'get_employees',
-          description: 'Retrieve employees',
-          inputSchema: {
-            type: 'object',
-            properties: {
-              limit: { type: 'number' },
-              offset: { type: 'number' },
-            },
-          },
-        },
-        {
-          name: 'get_employee',
-          description: 'Get specific employee by ID',
-          inputSchema: {
-            type: 'object',
-            properties: { employee_id: { type: 'string' } },
-            required: ['employee_id'],
-          },
-        },
-        {
-          name: 'get_absences',
-          description: 'Retrieve employee absences',
-          inputSchema: {
-            type: 'object',
-            properties: {
-              limit: { type: 'number' },
-              offset: { type: 'number' },
-            },
-          },
-        },
-        {
-          name: 'create_absence',
-          description: 'Create absence record',
-          inputSchema: {
-            type: 'object',
-            properties: {
-              employee_id: { type: 'string' },
-              absence_type: { type: 'string' },
-              start_date: { type: 'string' },
-              end_date: { type: 'string' },
-            },
-            required: ['absence_type', 'start_date', 'end_date'],
-          },
-        },
-        {
-          name: 'get_timetable',
-          description: 'Retrieve employee timetable/schedule (shows regular working hours and planned schedule)',
-          inputSchema: {
-            type: 'object',
-            properties: {
-              limit: { type: 'number', description: 'Maximum number to return (default: 10)' },
-              offset: { type: 'number', description: 'Number to skip for pagination' },
             },
           },
         },
@@ -909,24 +812,6 @@ export class SimplicateMCPServerFull {
             });
             return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
           }
-          case 'get_leave': {
-            const data = await this.simplicateService.getLeave({
-              limit: (toolArgs.limit as number) || 10,
-              offset: (toolArgs.offset as number) || 0,
-            });
-            return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
-          }
-          case 'create_leave': {
-            const data = await this.simplicateService.createLeave(toolArgs);
-            return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
-          }
-          case 'get_calendar_events': {
-            const data = await this.simplicateService.getCalendarEvents({
-              limit: (toolArgs.limit as number) || 10,
-              offset: (toolArgs.offset as number) || 0,
-            });
-            return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
-          }
 
           // INVOICES & FINANCE
           case 'get_invoices': {
@@ -963,38 +848,6 @@ export class SimplicateMCPServerFull {
           }
           case 'get_revenue': {
             const data = await this.simplicateService.getRevenue({
-              limit: (toolArgs.limit as number) || 10,
-              offset: (toolArgs.offset as number) || 0,
-            });
-            return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
-          }
-
-          // HRM
-          case 'get_employees': {
-            const data = await this.simplicateService.getEmployees({
-              limit: (toolArgs.limit as number) || 10,
-              offset: (toolArgs.offset as number) || 0,
-            });
-            return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
-          }
-          case 'get_employee': {
-            if (!toolArgs.employee_id) throw new Error('employee_id is required');
-            const data = await this.simplicateService.getEmployeeById(toolArgs.employee_id);
-            return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
-          }
-          case 'get_absences': {
-            const data = await this.simplicateService.getAbsences({
-              limit: (toolArgs.limit as number) || 10,
-              offset: (toolArgs.offset as number) || 0,
-            });
-            return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
-          }
-          case 'create_absence': {
-            const data = await this.simplicateService.createAbsence(toolArgs);
-            return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
-          }
-          case 'get_timetable': {
-            const data = await this.simplicateService.getTimetable({
               limit: (toolArgs.limit as number) || 10,
               offset: (toolArgs.offset as number) || 0,
             });
@@ -1134,8 +987,6 @@ export class SimplicateMCPServerFull {
         { uri: 'simplicate://persons', name: 'Persons', description: 'Contact persons', mimeType: 'application/json' },
         { uri: 'simplicate://hours', name: 'Hours', description: 'Timesheet hours', mimeType: 'application/json' },
         { uri: 'simplicate://invoices', name: 'Invoices', description: 'All invoices', mimeType: 'application/json' },
-        { uri: 'simplicate://employees', name: 'Employees', description: 'All employees', mimeType: 'application/json' },
-        { uri: 'simplicate://timetable', name: 'Timetable', description: 'Employee schedules and working hours', mimeType: 'application/json' },
         { uri: 'simplicate://quotes', name: 'Quotes', description: 'Sales quotes', mimeType: 'application/json' },
         { uri: 'simplicate://sales', name: 'Sales', description: 'Sales records', mimeType: 'application/json' },
         { uri: 'simplicate://services', name: 'Services', description: 'Service catalog', mimeType: 'application/json' },
@@ -1159,8 +1010,6 @@ export class SimplicateMCPServerFull {
           case 'simplicate://persons': data = await this.simplicateService.getPersons({ limit }); break;
           case 'simplicate://hours': data = await this.simplicateService.getHours({ limit }); break;
           case 'simplicate://invoices': data = await this.simplicateService.getInvoices({ limit }); break;
-          case 'simplicate://employees': data = await this.simplicateService.getEmployees({ limit }); break;
-          case 'simplicate://timetable': data = await this.simplicateService.getTimetable({ limit }); break;
           case 'simplicate://quotes': data = await this.simplicateService.getQuotes({ limit }); break;
           case 'simplicate://sales': data = await this.simplicateService.getSales({ limit }); break;
           case 'simplicate://services': data = await this.simplicateService.getServices({ limit }); break;
@@ -1184,7 +1033,7 @@ export class SimplicateMCPServerFull {
   async start(): Promise<void> {
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
-    console.error('Simplicate MCP server (FULL) running on stdio with 60+ tools');
+    console.error('Simplicate MCP server (FULL) running on stdio with 52 tools');
   }
 }
 
