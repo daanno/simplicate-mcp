@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "CommonJS",
-    "lib": ["ES2022"],
+  "module": "ESNext",
+  "lib": ["ES2022", "webworker"],
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": true,
@@ -16,6 +16,6 @@
     "sourceMap": true
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "exclude": ["node_modules", "dist", "src/worker.ts"]
 }
 

@@ -1,11 +1,19 @@
 {
   "name": "mcp-simplicate-server",
   "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/daanno/simplicate-mcp.git"
+  },
   "description": "Model Context Protocol server for Simplicate API integration",
   "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "tsc",
-    "start": "node dist/index.js",
+  "build": "tsc",
+  "start": "node dist/index.js",
+  "start:render": "node dist/health-server.js",
     "dev": "ts-node src/index.ts",
     "watch": "tsc --watch",
     "test": "node test-connection.js",
@@ -18,7 +26,7 @@
     "ai",
     "claude"
   ],
-  "author": "",
+  "author": "daanno",
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^0.5.0",

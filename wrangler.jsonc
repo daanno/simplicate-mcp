@@ -1,0 +1,7 @@
+{
+  // Minimal Wrangler config. This project is primarily a Node server (src/index.ts).
+  // The worker here is a small placeholder so `npx wrangler deploy` has an entry-point.
+  "name": "mcp-simplicate-worker",
+  "compatibility_date": "2025-10-14",
+  "main": "src/worker.js"
+}

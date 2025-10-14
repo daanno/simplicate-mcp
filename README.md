@@ -198,6 +198,23 @@ npm run watch
 Contributions are welcome! Please ensure:
 - Code follows TypeScript best practices
 - All new features include appropriate error handling
+
+## Automatic deploys to Render (GitHub Actions)
+
+This repository includes a GitHub Actions workflow at `.github/workflows/deploy-to-render.yml` which runs on push to `main`. The workflow builds the project and triggers a deploy via the Render API.
+
+Required GitHub repository secrets:
+
+- `RENDER_SERVICE_ID` — the ID of your Render service (find in your Render dashboard)
+- `RENDER_API_KEY` — a Render API key with permission to create deploys
+
+How it works:
+
+- On push to `main`, Actions checks out the code, installs dependencies (`npm ci`) and runs `npm run build`.
+- If the build succeeds, the workflow calls the Render API to trigger a deploy for the specified `RENDER_SERVICE_ID`.
+
+Note: Render will still run your specified build/start commands as configured in the Render service settings.
+
 - Documentation is updated for new features
 
 ## License
