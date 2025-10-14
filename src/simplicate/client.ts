@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
-import { config } from '../config/config';
+// include .js for runtime ESM resolution
+import { config } from '../config/config.js';
 
 export class SimplicateClient {
   private readonly axiosInstance: AxiosInstance;

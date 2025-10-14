@@ -1,8 +1,8 @@
 import dotenv from 'dotenv';
 import path from 'path';
 
-// Load .env from the project root directory
-const envPath = path.join(__dirname, '../../.env');
+// Load .env from the project root directory (use process.cwd() for ESM compatibility)
+const envPath = path.join(process.cwd(), '.env');
 dotenv.config({ path: envPath });
 
 export interface Config {

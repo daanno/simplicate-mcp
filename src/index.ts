@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { SimplicateMCPServerFull } from './mcp/server-full';
+import { SimplicateMCPServerFull } from './mcp/server-full.js';
 
 async function main() {
   try {

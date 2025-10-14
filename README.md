@@ -60,6 +60,37 @@ npm run build
 npm start
 ```
 
+### HTTP MCP adapter (remote)
+
+Start the HTTP MCP server (exposes /health, /tools, /call):
+
+```bash
+npm run build
+PORT=3002 npm run start:http-mcp
+```
+
+This is the recommended way to expose tools on a remote host (Render, Docker, etc.).
+
+### Local Claude Desktop / stdio proxy
+
+To forward a local StdIO-based MCP client (like Claude Desktop) to the remote HTTP MCP server, run:
+
+```bash
+REMOTE_MCP_URL=https://<your-remote>/call node src/stdio-proxy.js
+```
+
+The proxy reads newline-delimited JSON messages from stdin, forwards them as HTTP POST to REMOTE_MCP_URL, and writes the response back to stdout.
+
+### Render environment checklist
+
+Set the following environment variables in Render (or other hosts):
+
+- SIMPLICATE_API_KEY
+- SIMPLICATE_API_SECRET
+- SIMPLICATE_API_BASE_URL
+- (optional) REMOTE_MCP_URL — used by the stdio-proxy
+
+
 ### Connecting to Claude Desktop
 
 To use this MCP server with Claude Desktop, add the following configuration to your Claude Desktop config file:

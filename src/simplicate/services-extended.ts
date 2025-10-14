@@ -1,4 +1,5 @@
-import { SimplicateClient } from './client';
+// include .js so runtime ESM import resolves after tsc emit
+import { SimplicateClient } from './client.js';
 
 // ============================================
 // Core Interfaces
