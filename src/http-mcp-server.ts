@@ -52,6 +52,32 @@ async function dispatchTool(toolName: string, args: any) {
 const server = http.createServer(async (req, res) => {
   try {
     const url = new URL(req.url || '/', `http://localhost`);
+    // Simple SSE endpoint to satisfy clients that require an SSE URL (like n8n MCP node)
+    if (req.method === 'GET' && url.pathname === '/sse') {
+      // Set required SSE headers
+      res.writeHead(200, {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        Connection: 'keep-alive',
+      });
+
+      // send initial comment and event
+      res.write(': connected\n\n');
+      res.write('event: connected\n');
+      res.write('data: {"status":"ok"}\n\n');
+
+      // send keepalive every 20s
+      const keepAlive = setInterval(() => {
+        try { res.write(': keep-alive\n\n'); } catch (e) { /* ignore */ }
+      }, 20000);
+
+      // cleanup when client disconnects
+      req.on('close', () => {
+        clearInterval(keepAlive);
+      });
+
+      return;
+    }
     if (req.method === 'GET' && url.pathname === '/health') {
       return writeJson(res, 200, { status: 'ok', uptime: process.uptime(), node: process.version });
     }
