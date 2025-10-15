@@ -53,6 +53,23 @@ async function dispatchTool(toolName: string, args: any) {
   throw new Error(`Unknown tool/method: ${toolName} -> ${method}`);
 }
 
+// Track connected SSE clients for MCP HTTP flow
+const sseClients = new Set<http.ServerResponse>();
+
+function broadcastMcpMessage(message: any) {
+  const payload = JSON.stringify(message);
+  for (const client of Array.from(sseClients)) {
+    try {
+      client.write('event: message\n');
+      client.write(`data: ${payload}\n\n`);
+    } catch {
+      // if write fails, drop client
+      try { client.end(); } catch {}
+      sseClients.delete(client);
+    }
+  }
+}
+
 const server = http.createServer(async (req, res) => {
   try {
     const url = new URL(req.url || '/', `http://localhost`);
@@ -82,19 +99,32 @@ const server = http.createServer(async (req, res) => {
       // @ts-ignore
       if (typeof res.flushHeaders === 'function') res.flushHeaders();
 
+      // Track this client for MCP push messages
+      sseClients.add(res);
+
       // send initial comment and event
+      console.error('[SSE] client connected');
       res.write(': connected\n\n');
       res.write('event: connected\n');
       res.write('data: {"status":"ok"}\n\n');
+      // recommend client retry delay
+      res.write('retry: 30000\n\n');
 
       // send keepalive every 20s
       const keepAlive = setInterval(() => {
-        try { res.write(': keep-alive\n\n'); } catch (e) { /* ignore */ }
+        try {
+          // send both a comment and a lightweight ping event
+          res.write(': keep-alive\n\n');
+          res.write('event: ping\n');
+          res.write('data: {}\n\n');
+        } catch (e) { /* ignore */ }
       }, 20000);
 
       // cleanup when client disconnects
       req.on('close', () => {
         clearInterval(keepAlive);
+        sseClients.delete(res);
+        console.error('[SSE] client disconnected');
       });
 
       return;
@@ -119,10 +149,51 @@ const server = http.createServer(async (req, res) => {
       for await (const chunk of req) body += chunk;
       let payload: any;
       try { payload = JSON.parse(body || '{}'); } catch (err) { return writeJson(res, 400, { error: 'invalid_json' }); }
+      
+      // If request looks like MCP (method + id), route accordingly and push result over SSE
+      if (payload && typeof payload === 'object' && payload.method && payload.id) {
+        const requestId = payload.id;
+        const method = String(payload.method);
+        const params = payload.params || {};
+        try {
+          if (method === 'tools/list' || method === 'tools/listTools') {
+            const tools = [
+              'get_projects','get_project','create_project','update_project','delete_project','get_project_services',
+              'get_organizations','get_organization','create_organization','update_organization','get_persons','get_person','create_person','update_person',
+              'get_services','get_service','create_service','get_default_services','get_tasks','get_task','create_task','update_task',
+              'get_documents','get_document','get_contracts','get_contract','create_contract','get_custom_fields','search'
+            ].map(t => ({ name: t }));
+            broadcastMcpMessage({ type: 'response', id: requestId, result: { tools } });
+            res.writeHead(202, { 'Access-Control-Allow-Origin': '*' });
+            res.end();
+            return;
+          }
+          if (method === 'tools/call' || method === 'callTool') {
+            const toolName = params.name || params.toolName || params.tool;
+            const toolArgs = params.arguments || params.args || {};
+            if (!toolName) return writeJson(res, 400, { error: 'missing_name' });
+            const result = await dispatchTool(toolName, toolArgs);
+            broadcastMcpMessage({ type: 'response', id: requestId, result: { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] } });
+            res.writeHead(202, { 'Access-Control-Allow-Origin': '*' });
+            res.end();
+            return;
+          }
+          // Unknown method
+          broadcastMcpMessage({ type: 'response', id: requestId, error: { message: `Unknown method: ${method}` } });
+          res.writeHead(202, { 'Access-Control-Allow-Origin': '*' });
+          res.end();
+          return;
+        } catch (err: any) {
+          broadcastMcpMessage({ type: 'response', id: requestId, error: { message: err?.message || String(err) } });
+          res.writeHead(202, { 'Access-Control-Allow-Origin': '*' });
+          res.end();
+          return;
+        }
+      }
 
+      // Fallback: simple JSON flow used by curl
       const { name, arguments: args } = payload;
       if (!name) return writeJson(res, 400, { error: 'missing_name' });
-
       try {
         const result = await dispatchTool(name, args || {});
         return writeJson(res, 200, { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] });
