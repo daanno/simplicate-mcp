@@ -9,7 +9,11 @@ const service = new SimplicateServiceExtended();
 
 function writeJson(res: http.ServerResponse, code: number, obj: any) {
   const body = JSON.stringify(obj);
-  res.writeHead(code, { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) });
+  res.writeHead(code, {
+    'Content-Type': 'application/json',
+    'Content-Length': Buffer.byteLength(body),
+    'Access-Control-Allow-Origin': '*',
+  });
   res.end(body);
 }
 
@@ -52,14 +56,31 @@ async function dispatchTool(toolName: string, args: any) {
 const server = http.createServer(async (req, res) => {
   try {
     const url = new URL(req.url || '/', `http://localhost`);
+    // Basic CORS preflight support
+    if (req.method === 'OPTIONS') {
+      res.writeHead(204, {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authentication-Key, Authentication-Secret, Accept',
+        'Access-Control-Max-Age': '86400',
+      });
+      res.end();
+      return;
+    }
     // Simple SSE endpoint to satisfy clients that require an SSE URL (like n8n MCP node)
     if (req.method === 'GET' && url.pathname === '/sse') {
       // Set required SSE headers
       res.writeHead(200, {
         'Content-Type': 'text/event-stream',
-        'Cache-Control': 'no-cache',
+        'Cache-Control': 'no-cache, no-transform',
         Connection: 'keep-alive',
+        'X-Accel-Buffering': 'no',
+        'Access-Control-Allow-Origin': '*',
       });
+
+      // Flush headers immediately when supported (helps some proxies)
+      // @ts-ignore
+      if (typeof res.flushHeaders === 'function') res.flushHeaders();
 
       // send initial comment and event
       res.write(': connected\n\n');
